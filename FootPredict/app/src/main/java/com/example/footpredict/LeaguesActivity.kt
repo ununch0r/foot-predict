@@ -27,7 +27,7 @@ class LeaguesActivity : AppCompatActivity() {
     }
 
     fun fillArray(leagues: ArrayList<League>){
-        leagues.add(League(1, "English Premier League"))
+        leagues.add(League(2790, "English Premier League"))
         leagues.add(League(2, "Bundesliga"))
         leagues.add(League(3, "Seria A"))
     }
