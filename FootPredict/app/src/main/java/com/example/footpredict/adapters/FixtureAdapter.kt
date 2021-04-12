@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.footpredict.R
 import com.example.footpredict.data.ApiResponse
 
-class FixtureAdapter(fixtures : ArrayList<ApiResponse.Api.Fixture>, context: Context) : RecyclerView.Adapter<FixtureAdapter.ViewHolder>() {
+class FixtureAdapter(fixtures : List<ApiResponse.Api.Fixture>, context: Context) : RecyclerView.Adapter<FixtureAdapter.ViewHolder>() {
 
     var fixturesArray = fixtures
     var contextRecycler = context
