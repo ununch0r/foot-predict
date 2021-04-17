@@ -52,7 +52,7 @@ class LeaguesActivity : AppCompatActivity() {
         recyclerView.adapter = LeagueAdapter(leagues, this)
     }
 
-    public fun onBack(view: View) {
+    fun onBack(view: View) {
         onBackPressed()
     }
 }

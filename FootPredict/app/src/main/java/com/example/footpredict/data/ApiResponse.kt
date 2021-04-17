@@ -8,6 +8,7 @@ data class ApiResponse(
         val results: Int
     ) {
         data class Fixture(
+            val fixture_id : Int,
             val awayTeam: AwayTeam,
             val event_date: String,
             val homeTeam: HomeTeam,

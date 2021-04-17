@@ -41,45 +41,54 @@ class MatchesActivity : AppCompatActivity() {
     fun fetchMock(){
         var mockData : List<ApiResponse.Api.Fixture> = listOf(
                 ApiResponse.Api.Fixture(
+                        1,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Machecster United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Machecster City")),
                 ApiResponse.Api.Fixture(
+                    2,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    3,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    4,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    5,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    6,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    7,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    8,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
                 ),
                 ApiResponse.Api.Fixture(
+                    9,
                         ApiResponse.Api.Fixture.AwayTeam("test",1,"Sheffield United"),
                         "2020-01-19T16:30:00+00:00",
                         ApiResponse.Api.Fixture.HomeTeam("test",1,"Leicester City")
@@ -140,7 +149,7 @@ class MatchesActivity : AppCompatActivity() {
                 var apiResponse = gson.fromJson(body, ApiResponse::class.java)
 
                 runOnUiThread {
-                    var todayFixtures = apiResponse.api.fixtures.filter { fixture ->  isDateSameAsSelected(fixture.event_date)}
+                    var todayFixtures = apiResponse.api.fixtures.filter { fixture ->   true}//isDateSameAsSelected(fixture.event_date)}
                     if(todayFixtures.count() < 1)
                     {
                         errorToast("There aren't any matches on selected date.")

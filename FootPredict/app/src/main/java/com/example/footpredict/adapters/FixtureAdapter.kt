@@ -1,13 +1,17 @@
 package com.example.footpredict.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.footpredict.FixtureActivity
+import com.example.footpredict.MatchesActivity
 import com.example.footpredict.R
 import com.example.footpredict.data.ApiResponse
 import java.time.LocalDate
@@ -26,11 +30,21 @@ class FixtureAdapter(fixtures : List<ApiResponse.Api.Fixture>, context: Context)
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item : ApiResponse.Api.Fixture, context: Context){
+            setInfo(item)
+            itemView.setOnClickListener{
+                val intent = Intent(context, FixtureActivity::class.java)
+                intent.putExtra(R.string.fixtureId.toString(), item.fixture_id)
+                context.startActivity(intent)
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun setInfo(item : ApiResponse.Api.Fixture){
             var totalLength = item.awayTeam.team_name.length + item.homeTeam.team_name.length
             setFontSize(tvFirstTeam, tvSecondTeam, totalLength)
             tvFirstTeam.text = item.homeTeam.team_name
             tvSecondTeam.text = item.awayTeam.team_name
-            val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME; // тут замінити на паттерн з респонсу
+            val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
             val date = LocalDateTime.parse(item.event_date,formatter);
             tvTime.text = date.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
