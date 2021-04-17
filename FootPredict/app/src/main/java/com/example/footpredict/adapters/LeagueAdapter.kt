@@ -24,6 +24,7 @@ class LeagueAdapter(leagues : ArrayList<League>, context: Context) : RecyclerVie
             itemView.setOnClickListener{
                 val intent = Intent(context, MatchesActivity::class.java)
                 intent.putExtra(R.string.leagueName.toString(), item.name)
+                intent.putExtra(R.string.leagueId.toString(), item.id)
                 context.startActivity(intent)
             }
         }

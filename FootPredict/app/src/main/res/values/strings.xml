@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">FootPredict</string>
+    <string name="leagueId">LeagueId</string>
     <string name="leagueName">LeagueName</string>
 </resources>
