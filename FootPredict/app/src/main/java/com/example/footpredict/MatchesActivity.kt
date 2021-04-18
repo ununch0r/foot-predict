@@ -149,7 +149,7 @@ class MatchesActivity : AppCompatActivity() {
                 var apiResponse = gson.fromJson(body, ApiResponse::class.java)
 
                 runOnUiThread {
-                    var todayFixtures = apiResponse.api.fixtures.filter { fixture ->   true}//isDateSameAsSelected(fixture.event_date)}
+                    var todayFixtures = apiResponse.api.fixtures.filter { fixture -> isDateSameAsSelected(fixture.event_date)}
                     if(todayFixtures.count() < 1)
                     {
                         errorToast("There aren't any matches on selected date.")
