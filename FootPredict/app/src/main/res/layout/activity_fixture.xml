@@ -452,6 +452,7 @@
         android:text="Simulate!"
         android:width="160dp"
         android:height="40dp"
+        android:onClick="onSimulate"
         android:background="@drawable/rounded_corners"
         android:fontFamily="@font/bubblegum_sans"
         android:textColor="#DDE7C7"

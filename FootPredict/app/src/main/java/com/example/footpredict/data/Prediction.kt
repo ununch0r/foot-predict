@@ -39,17 +39,17 @@ data class Prediction(
         ) {
             @Serializable
             data class Comparison(
-                @SerialName("att")
+                    @SerialName("att")
                 val att: Att,
-                @SerialName("def")
+                    @SerialName("def")
                 val def: Def,
-                @SerialName("fish_law")
+                    @SerialName("fish_law")
                 val fishLaw: FishLaw,
-                @SerialName("forme")
+                    @SerialName("forme")
                 val forme: Forme,
-                @SerialName("goals_h2h")
-                val goalsH2h: GoalsH2h,
-                @SerialName("h2h")
+                    @SerialName("goals_h2h")
+                val goals_h2h: GoalsH2h,
+                    @SerialName("h2h")
                 val h2h: H2h
             ) {
                 @Serializable

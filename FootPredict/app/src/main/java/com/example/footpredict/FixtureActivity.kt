@@ -1,19 +1,17 @@
 package com.example.footpredict
 
+import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.footpredict.adapters.FixtureAdapter
-import com.example.footpredict.data.ApiResponse
+import androidx.appcompat.app.AppCompatActivity
 import com.example.footpredict.data.Fixture
-import com.example.footpredict.data.FixtureInfo
+import com.example.footpredict.data.Prediction
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.squareup.picasso.Picasso
 import okhttp3.*
@@ -21,10 +19,11 @@ import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 class FixtureActivity : AppCompatActivity() {
     var fixtureId : Int = 0
-    lateinit var fixturePrediction: Fixture.Api.Prediction
-    lateinit var fixtureInfo: FixtureInfo.Api.Fixture
+    lateinit var fixturePrediction: Prediction.Api.Prediction
+    lateinit var fixtureInfo: Fixture.Api.Fixture
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +40,16 @@ class FixtureActivity : AppCompatActivity() {
 
     fun onBack(view: View) {
         onBackPressed()
+    }
+
+    fun onSimulate(view: View){
+        val gson = Gson()
+        val prediction = gson.toJson(fixturePrediction)
+        val fixture = gson.toJson(fixtureInfo)
+        val intent = Intent(this, SimulationActivity::class.java)
+        intent.putExtra(R.string.predictionContent.toString(), prediction)
+        intent.putExtra(R.string.fixtureContent.toString(), fixture)
+        this.startActivity(intent)
     }
 
     fun fetchPrediction(id : Int?)  {
@@ -61,12 +70,12 @@ class FixtureActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()?.string()
                 val gson = GsonBuilder().create()
-                var fixture = gson.fromJson(body, Fixture::class.java)
+                var prediction = gson.fromJson(body, Prediction::class.java)
 
                 runOnUiThread {
-                    fixturePrediction = fixture.api.predictions.first()
-                    setAdvice(fixture.api.predictions.first().advice)
-                    setStatistics(fixture.api.predictions.first())
+                    fixturePrediction = prediction.api.predictions.first()
+                    setAdvice(fixturePrediction.advice)
+                    setStatistics(fixturePrediction)
                 }
             }
 
@@ -88,7 +97,7 @@ class FixtureActivity : AppCompatActivity() {
                 }
             }
 
-            fun setStatistics(prediction: Fixture.Api.Prediction){
+            fun setStatistics(prediction: Prediction.Api.Prediction){
                 val tvHomeForm = findViewById<TextView>(R.id.tvHomeForm)
                 val tvAwayForm = findViewById<TextView>(R.id.tvAwayForm)
                 val tvHomeAttack = findViewById<TextView>(R.id.tvHomeAttack)
@@ -132,7 +141,7 @@ class FixtureActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()?.string()
                 val gson = GsonBuilder().create()
-                var fixture = gson.fromJson(body, FixtureInfo::class.java)
+                var fixture = gson.fromJson(body, Fixture::class.java)
 
                 runOnUiThread {
                     fixtureInfo = fixture.api.fixtures.first()

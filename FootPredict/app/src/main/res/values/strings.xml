@@ -3,4 +3,6 @@
     <string name="leagueId">LeagueId</string>
     <string name="leagueName">LeagueName</string>
     <string name="fixtureId">FixtureId</string>
+    <string name="predictionContent">PredictionContent</string>
+    <string name="fixtureContent">FixtureContent</string>
 </resources>
