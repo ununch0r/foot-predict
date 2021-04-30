@@ -6,11 +6,13 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.footpredict.data.Fixture
 import com.example.footpredict.data.Prediction
+import com.example.footpredict.database.DbManager
 import com.example.footpredict.models.Simulation
 import com.example.footpredict.models.SimulationEvent
 import com.google.gson.Gson
@@ -22,7 +24,8 @@ import java.time.format.DateTimeFormatter
 class SimulationActivity : AppCompatActivity() {
     lateinit var fixturePrediction: Prediction.Api.Prediction
     lateinit var fixtureInfo: Fixture.Api.Fixture
-    var simulation = Simulation(0,0);
+    var simulation = Simulation("","",0,0);
+    var dbManager = DbManager(this)
 
     lateinit var firstTeamScore : TextView
     lateinit var secondTeamScore : TextView
@@ -87,6 +90,8 @@ class SimulationActivity : AppCompatActivity() {
                 Prediction.Api.Prediction::class.java)
         fixtureInfo = gson.fromJson(intent.getStringExtra(R.string.fixtureContent.toString()),
                 Fixture.Api.Fixture::class.java)
+        simulation.firstTeamName = fixtureInfo.homeTeam.team_name
+        simulation.secondTeamName = fixtureInfo.awayTeam.team_name
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -178,11 +183,26 @@ class SimulationActivity : AppCompatActivity() {
         }
     }
 
-    fun onShare(view: View){}
-    fun onSave(view: View){}
+    fun onShare(view: View){
+        dbManager.openDb()
+        var matches = dbManager.getMatches()
+        var text = matches[0].firstTeamName +" " + matches[0].firstTeamScore + "-" + matches[0].secondTeamName +" " + matches[0].secondTeamScore
+
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(applicationContext, text, duration)
+        toast.show()
+    }
+
+
+    fun onSave(view: View){
+        dbManager.openDb()
+        dbManager.insertToDatabase(simulation)
+        dbManager.closeDb()
+        view.isEnabled = false
+    }
 
     fun onStart(view: View){
-        val timer = object: CountDownTimer(18000, 200) {
+        val timer = object: CountDownTimer(18000,200) {
             override fun onTick(millisUntilFinished: Long) {
                 minuteValue++;
                 var event = getEvent(minuteValue)
