@@ -181,7 +181,8 @@ class FixtureActivity : AppCompatActivity() {
             @RequiresApi(Build.VERSION_CODES.O)
             fun setEventDate(eventDateTime : String){
                 val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-                val dateTime = LocalDateTime.parse(eventDateTime,formatter)
+                var dateTime = LocalDateTime.parse(eventDateTime,formatter)
+                dateTime = dateTime.plusHours(2)
                 var stringDate = dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
 
                 var tvFixtureDateTime = findViewById<TextView>(R.id.tvFixtureDateTime)

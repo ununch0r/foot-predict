@@ -45,7 +45,8 @@ class FixtureAdapter(fixtures : List<ApiResponse.Api.Fixture>, context: Context)
             tvFirstTeam.text = item.homeTeam.team_name
             tvSecondTeam.text = item.awayTeam.team_name
             val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-            val date = LocalDateTime.parse(item.event_date,formatter);
+            var date = LocalDateTime.parse(item.event_date,formatter);
+            date = date.plusHours(2)
             tvTime.text = date.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
 

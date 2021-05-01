@@ -228,7 +228,8 @@ class SimulationActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDelayInMilliseconds(): Long{
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-        val dateTime = LocalDateTime.parse(fixtureInfo.event_date,formatter)
+        var dateTime = LocalDateTime.parse(fixtureInfo.event_date,formatter)
+        dateTime = dateTime.plusHours(2)
         val duration: Duration = Duration.between(LocalDateTime.now(), dateTime)
         return duration.toMillis()
     }
