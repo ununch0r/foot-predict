@@ -1,12 +1,17 @@
 package com.example.footpredict
 
+import android.app.AlarmManager
+import android.app.Notification
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -184,15 +189,29 @@ class SimulationActivity : AppCompatActivity() {
     }
 
     fun onShare(view: View){
-        dbManager.openDb()
-        var matches = dbManager.getMatches()
-        var text = matches[0].firstTeamName +" " + matches[0].firstTeamScore + "-" + matches[0].secondTeamName +" " + matches[0].secondTeamScore
-
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(applicationContext, text, duration)
-        toast.show()
+        var message = "Hey, BRO, check out FootPredict App! It predicted " +
+                "${simulation.firstTeamName} ${simulation.firstTeamScore} - ${simulation.secondTeamScore} ${simulation.secondTeamName}"
+        intentMessageTelegram(message)
     }
 
+    fun intentMessageTelegram(msg: String?) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, msg)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
+    private fun getNotification(content: String): Notification? {
+        val builder = Notification.Builder(this)
+        builder.setContentTitle("Scheduled Notification")
+        builder.setContentText(content)
+        builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
+        return builder.build()
+    }
 
     fun onSave(view: View){
         dbManager.openDb()
@@ -202,7 +221,7 @@ class SimulationActivity : AppCompatActivity() {
     }
 
     fun onStart(view: View){
-        val timer = object: CountDownTimer(18000,200) {
+        val timer = object: CountDownTimer(36000,400) {
             override fun onTick(millisUntilFinished: Long) {
                 minuteValue++;
                 var event = getEvent(minuteValue)
