@@ -1,10 +1,9 @@
 package com.example.footpredict
 
-import android.app.AlarmManager
-import android.app.Notification
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -18,10 +17,12 @@ import androidx.core.view.isVisible
 import com.example.footpredict.data.Fixture
 import com.example.footpredict.data.Prediction
 import com.example.footpredict.database.DbManager
+import com.example.footpredict.helpers.NotificationPublisher
 import com.example.footpredict.models.Simulation
 import com.example.footpredict.models.SimulationEvent
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -31,6 +32,11 @@ class SimulationActivity : AppCompatActivity() {
     lateinit var fixtureInfo: Fixture.Api.Fixture
     var simulation = Simulation("","",0,0);
     var dbManager = DbManager(this)
+
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var notificationManager: NotificationManager
+    private val channelId = "i.apps.notifications"
+    lateinit var builder: Notification.Builder
 
     lateinit var firstTeamScore : TextView
     lateinit var secondTeamScore : TextView
@@ -205,19 +211,58 @@ class SimulationActivity : AppCompatActivity() {
         startActivity(shareIntent)
     }
 
-    private fun getNotification(content: String): Notification? {
-        val builder = Notification.Builder(this)
-        builder.setContentTitle("Scheduled Notification")
-        builder.setContentText(content)
-        builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
-        return builder.build()
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onSave(view: View){
         dbManager.openDb()
         dbManager.insertToDatabase(simulation)
         dbManager.closeDb()
         view.isEnabled = false
+        var delay = calculateDelayInMilliseconds()
+        scheduleNotification(getNotification(getNotificationMessage()),delay)
+    }
+
+    private fun getNotificationMessage() : String{
+        return "Match " + simulation.firstTeamName +" - " + simulation.secondTeamName + " started!"
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateDelayInMilliseconds(): Long{
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val dateTime = LocalDateTime.parse(fixtureInfo.event_date,formatter)
+        val duration: Duration = Duration.between(LocalDateTime.now(), dateTime)
+        return duration.toMillis()
+    }
+
+    private fun scheduleNotification(notification: Notification?, delay: Long) {
+        val notificationIntent = Intent(this, NotificationPublisher::class.java)
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1)
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification)
+        val pendingIntent = PendingIntent.getBroadcast(this, fixtureInfo.fixture_id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val futureInMillis = SystemClock.elapsedRealtime() + delay
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager[AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis] = pendingIntent
+    }
+
+
+    private fun getNotification(content: String): Notification? {
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(channelId, content, NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.GREEN
+            notificationChannel.enableVibration(false)
+            notificationManager.createNotificationChannel(notificationChannel)
+
+            builder = Notification.Builder(this, channelId)
+        } else {
+            builder = Notification.Builder(this)
+        }
+
+        builder.setContentTitle("Match started!");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_launcher_background)
+
+        return builder.build()
     }
 
     fun onStart(view: View){

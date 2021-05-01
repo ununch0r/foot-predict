@@ -21,7 +21,7 @@ class SavedMatchesActivity : AppCompatActivity() {
         var recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSavedMatches)
         recyclerView.hasFixedSize()
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = SavedMatchesAdapter(matches, this)
+        recyclerView.adapter = SavedMatchesAdapter(matches.reversed(), this)
     }
 
     fun onBack(view: View) {
