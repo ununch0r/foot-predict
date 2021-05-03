@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import java.lang.Exception
 
 
 class MainActivity : Activity() {
@@ -24,8 +25,9 @@ class MainActivity : Activity() {
 
 
         savedButton.setOnClickListener{
-            val intent = Intent(this,SavedMatchesActivity::class.java)
-            startActivity(intent)
+            throw Exception()
+//            val intent = Intent(this,SavedMatchesActivity::class.java)
+//            startActivity(intent)
         }
     }
 }
